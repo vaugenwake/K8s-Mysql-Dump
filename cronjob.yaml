@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-dump
+spec:
+  schedule: "0 0 1 ? * WED *"
+  jobTemplate:
+    template:
+      spec:
+        containers:
+          - name: backup
+            image: vaugenwake/mysqldumps3:latest
+            env:
+              - name: S3_ACCESS_KEY_ID
+                value: key_here
+              - name: S3_SECRET_ACCESS_KEY
+                value: key_here
+              - name: S3_BUCKET
+                value: bucker_name_here
+              - name: S3_REGION
+                value: region_here
+              - name: S3_ENDPOINT
+                value: http://
+              - name: MULTI_FILES
+                value: "yes"
+              - name: S3_PREFIX
+                value: backup
+              - name: MYSQL_HOST
+                value: mysql_service
+              - name: MYSQL_USER
+                value: mysql_user
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mysql
+                    key: mysql-password
+        restartPolicy: Never
+  backoffLimit: 4

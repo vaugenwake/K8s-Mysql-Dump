@@ -1,11 +1,17 @@
-#!/bin/sh
+#! /bin/sh
 
+# exit if a command fails
 set -e
 
-apk update
 
-# install mysql-client and mysqldump
-apk add mysql-client python py-pip awscli
+apk update
+apk add python3 py3-pip
+
+# install mysqldump
+apk add mysql-client
+
+# install s3 tools
+pip install awscli
 apk del py-pip
 
 # install go-cron
